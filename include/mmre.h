@@ -19,7 +19,8 @@ void _log(enum logLevel level, char *msg, ...);
 #else
 #define log(lvl, ...) \
 	do { \
-		fprintf(stderr, "%s:%d: ", __FILE__, __LINE__); \
+		if (lvl >= min_log_level) \
+			fprintf(log_file, "%s:%d: ", __FILE__, __LINE__); \
 		_log(lvl, __VA_ARGS__); \
 	} while (0)
 #endif
@@ -96,6 +97,7 @@ uint64_t djb2(const char *str);
 int hash_cmp(const void *a, const void *b);
 void check_entry(struct user *user, struct entry *entry);
 void save_hash(struct entry *entry, uint64_t hash);
+size_t asprintf(char **buf, char *fmt, ...);
 
 #ifndef MMRE_NO_GLOB
 extern FILE *log_file;

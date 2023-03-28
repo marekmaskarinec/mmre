@@ -31,12 +31,12 @@ _log(enum logLevel level, char *msg, ...)
 
 	const char *levelStr[] = { "DBG", "INF", "ERR", "FAT" };
 
-	fprintf(stderr, "[%s]: ", levelStr[level]);
+	fprintf(log_file, "[%s]: ", levelStr[level]);
 
 	va_list args;
 	va_start(args, msg);
-	vfprintf(stderr, msg, args);
-	fprintf(stderr, "\n");
+	vfprintf(log_file, msg, args);
+	fprintf(log_file, "\n");
 	va_end(args);
 	
 	if (level == LOG_FAT)
@@ -66,6 +66,7 @@ user_free(struct user *user)
 	free(user->smtp_from);
 	free(user->smtp_login);
 	free(user->smtp_pwd);
+	free(user->smtp_url);
 }
 
 static void
@@ -150,4 +151,22 @@ save_hash(struct entry *entry, uint64_t hash)
 	assertr(, f, "Could not open file %s.", buf);
 	fwrite(entry->hashes, sizeof(uint64_t), entry->nhash, f);
 	fclose(f);
+}
+
+size_t
+asprintf(char **buf, char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	
+	char c;
+	size_t siz = vsnprintf(&c, 1, fmt, args) + 1;
+	*buf = malloc(siz);
+	(*buf)[siz - 1] = 0;
+	
+	vsnprintf(*buf, siz, fmt, args);
+
+	va_end(args);
+	
+	return siz;
 }

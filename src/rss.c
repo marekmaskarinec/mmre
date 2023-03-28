@@ -1,5 +1,4 @@
 #include <string.h>
-#define _GNU_SOURCE
 #include <stdio.h>
 
 #include <libxml/parser.h>
@@ -80,6 +79,8 @@ check_entry_rss_callback(void *user, struct post *post)
 	const struct user *owner = entry->owner;
 	if (bsearch(&post->hash, entry->hashes, entry->nhash, sizeof(uint64_t), hash_cmp))
 		return;
+	
+	log(LOG_INF, "New unread post %lx from feed %s.", post->hash, entry->url);
 	
 	char *subject;
 	asprintf(&subject, "%s: %s", post->parent->name, post->title);

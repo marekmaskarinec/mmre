@@ -89,6 +89,7 @@ validate_user(struct user *user)
 void
 load_config(char *path)
 {
+        log(LOG_INF, "Reading configuration file %s.", path);
         // in case we are reloading at runtime
         for (int i=0; i < nuser; ++i)
                 user_free(&users[i]);

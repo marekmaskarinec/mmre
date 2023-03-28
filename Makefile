@@ -3,7 +3,7 @@ SRC=$(wildcard src/*.c) inih/ini.c
 OBJ=$(sort $(SRC:.c=.o))
 BIN=mmre
 HEADER=include/mmre.h
-CC=clang
+CC=gcc
 CFLAGS= \
 	-Iinclude \
 	-I/usr/include/libxml2 \
@@ -12,7 +12,7 @@ CFLAGS= \
 	-g \
 	-Wno-unused-label \
 	-Wno-pointer-to-int-cast \
-	-fsanitize=address
+	-fsanitize=leak
 LD= -lxml2 -lcurl
 
 TEST_SRC=$(wildcard tests/*.c)

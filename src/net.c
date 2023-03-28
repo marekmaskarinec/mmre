@@ -1,5 +1,4 @@
 #include <curl/curl.h>
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +39,7 @@ getUrl__writeFunction(char *ptr, size_t size, size_t nmemb, struct wbuf *b)
 char *
 get_url(const char *url)
 {
-	log(LOG_DBG, "Getting %s.\n", url);
+	log(LOG_DBG, "Getting %s.", url);
 	CURL *curl = curl_easy_init();
 	assertr(NULL, curl, "Could not init curl.");
 	
@@ -97,6 +96,7 @@ send_email_SMTP(
 	const char *pwd,
 	const char *msg)
 {
+	log(LOG_DBG, "Sending email to %s.", to);
 	CURL *curl = curl_easy_init();
 	assertr(, curl, "Could not init curl.");
 	
@@ -144,8 +144,6 @@ send_email_SMTP(
 		rand(), rand(), rand(), rand(), rand(), domain,
 		subject, msg);
 	buf.len = strlen(buf.buf);
-	
-	printf("%s\n", buf.buf);
 
 	curl_easy_setopt(curl, CURLOPT_READFUNCTION, sendEmailSMTP__readFunction);
 	curl_easy_setopt(curl, CURLOPT_READDATA, &buf);
