@@ -11,6 +11,7 @@ CFLAGS= \
 	-DNDEBUG \
 	-Wno-unused-label \
 	-Wno-pointer-to-int-cast \
+	-Wno-unused-result \
 	-O2
 LD= -lxml2 -lcurl
 

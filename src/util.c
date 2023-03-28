@@ -31,7 +31,13 @@ _log(enum logLevel level, char *msg, ...)
 
 	const char *levelStr[] = { "DBG", "INF", "ERR", "FAT" };
 
-	fprintf(log_file, "[%s]: ", levelStr[level]);
+	time_t t = time(NULL);
+	struct tm *tm = localtime(&t);
+
+	fprintf(log_file, "%04d-%02d-%02dT%02d:%02d:%02d: [%s]: ",
+		tm->tm_year + 1900, tm->tm_mon, tm->tm_mday,
+		tm->tm_hour, tm->tm_min, tm->tm_sec,
+		levelStr[level]);
 
 	va_list args;
 	va_start(args, msg);

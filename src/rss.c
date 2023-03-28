@@ -38,7 +38,7 @@ parse_RSS(const char *url, const char *text, void (* callback)(void *user, struc
 	struct feed feed = {0};
 	
 	root = xmlDocGetRootElement(doc);
-	xmlNode *channel;
+	xmlNode *channel = {0};
 	
 	for (xmlNode *node = root->children; node; node = node->next)
 		if (strcmp((char *)node->name, "channel") == 0)
