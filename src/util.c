@@ -39,6 +39,8 @@ _log(enum logLevel level, char *msg, ...)
 	fprintf(log_file, "\n");
 	va_end(args);
 	
+	fflush(log_file);
+
 	if (level == LOG_FAT)
 		abort();
 }
