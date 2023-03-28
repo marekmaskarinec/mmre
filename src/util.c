@@ -123,6 +123,7 @@ load_hashes(uint64_t **hashes, struct user *user, const char *url)
 	}
 	
 	f = fopen(buf, "wb");
+	assertf(f, "Could not open file %s\n.", buf);
 	log(LOG_DBG, "%s was not found, downloading feed from %s.", buf, url);
 	char *data = get_url(url);
 	assertg(fail, !parse_RSS(url, data, write_hashes_callback, f), "Could not parse RSS");

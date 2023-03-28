@@ -11,8 +11,7 @@ CFLAGS= \
 	-Wall \
 	-g \
 	-Wno-unused-label \
-	-Wno-pointer-to-int-cast \
-	-fsanitize=leak
+	-Wno-pointer-to-int-cast
 LD= -lxml2 -lcurl
 
 TEST_SRC=$(wildcard tests/*.c)
@@ -30,4 +29,4 @@ clean:
 
 $(BIN): $(OBJ)
 	@echo LD $@
-	@$(CC) $(CFLAGS) $(LD) -o $@ $(OBJ)
+	@$(CC) $(CFLAGS) -o $@ $(OBJ) $(LD)

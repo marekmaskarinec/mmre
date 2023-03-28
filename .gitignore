@@ -1,3 +1,5 @@
 mmre
 *.o
 .vscode
+conf.ini
+log
