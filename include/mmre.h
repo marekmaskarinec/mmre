@@ -97,7 +97,7 @@ uint64_t djb2(const char *str);
 int hash_cmp(const void *a, const void *b);
 void check_entry(struct user *user, struct entry *entry);
 void save_hash(struct entry *entry, uint64_t hash);
-size_t asprintf(char **buf, char *fmt, ...);
+int asprintf(char **buf, const char *fmt, ...);
 
 #ifndef MMRE_NO_GLOB
 extern FILE *log_file;

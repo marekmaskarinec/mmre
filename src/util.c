@@ -153,8 +153,8 @@ save_hash(struct entry *entry, uint64_t hash)
 	fclose(f);
 }
 
-size_t
-asprintf(char **buf, char *fmt, ...)
+int
+asprintf(char **buf, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
