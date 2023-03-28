@@ -1,0 +1,29 @@
+.Dd $Mdocdate$
+.Dt mmre 1
+.Os
+.Sh NAME
+.Nm mmre
+.Nd an RSS to email daemon
+.Sh SYNOPSIS
+.Nm mmre
+.Op Ar -c config
+.Op Ar -l log
+.Op Ar -v
+.Sh DESCRIPTION
+A daemon which periodically checks RSS feeds and sends new posts to an email
+using SMTP.  It supports multiple users and feeds.
+
+The options are as follows:
+.Bl -tag -width Ds
+.It Ar -c
+Specify the configuration file.  By default: /etc/mmre.ini
+.It Ar -l
+Specify the log file. By default: /var/log/mmre.log
+.It Ar -v
+Show verbose output
+.Sh SEE ALSO
+.Xr mmre 5
+.Sh AUTHORS
+Made by
+.An Marek Maškarinec ,
+.Mt marek@mrms.cz .

@@ -1,0 +1,52 @@
+.Dd $Mdocdate$
+.Dt MMRE 5
+.Os
+.
+.
+.Sh NAME
+.Nm mmre
+.Nd mmre configuration format
+.
+.
+.Sh DESCRIPTION
+mmre uses a simple INI based configuration format. Example:
+.Bd -literal -offset indent
+[meta]
+interval = 20
+
+[user]
+email = <example@example.com>
+smtp_login = rss
+smtp_pwd = pa$$word1
+smtp_from = <rss@example.com>
+smtp_url = smtps://smtp.example.com
+smtp_domain = example.com
+url = https://mrms.cz/articles/rss.xml
+url = https://mrms.cz/game/rss.xml
+.Sh meta section
+The meta section specifies non-user-specific configuration.
+.Ss interval
+The interval in minutes at which feeds shall be checked.
+.Sh user section
+The user section specifies per-user configuration.
+.Ss email
+This specifies the email to which posts will be sent.  The email property
+creates a new user.  The address must be inside <>.
+.Ss smtp_login
+This specifies the login of the outgoing address.
+.Ss smtp_pwd
+Password to the outgoing address.
+.Ss smtp_from
+The outgoing address, must be inside <>.
+.Ss smtp_url
+Specify the adress of the outgoing smtp server.
+.Ss smtp_domain
+Specify the domain, where the smtp server runs.  Should be same as in
+smtp_from.
+.Ss url
+Add a feed by it's url.  This option can be used multiple times.
+.Sh SEE ALSO
+.Xa mmre 1
+.Sh AUTHOR
+.An Marek Maškarinec ,
+.Mt marek@mrms.cz .
