@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
 	
 	signal(SIGINT, SIGINT_handler);
 	signal(SIGHUP, SIGHUP_handler);
+	signal(SIGTERM, SIGINT_handler);
 	
 	while (alive) {
 		for (int i=0; i < nuser; ++i)
