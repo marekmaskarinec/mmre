@@ -1,13 +1,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <string.h>
 
 #include <curl/curl.h>
 
 #define MMRE_NO_GLOB
 #include <mmre.h>
 
-FILE *log_file;
+FILE *log_file = NULL;
 int min_log_level;
 uint32_t interval;
 struct user *users;
@@ -68,7 +69,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	log_file = fopen(log_path, "a");
+	if (strcmp("-", log_path) != 0)
+		log_file = fopen(log_path, "a");
 	if (log_file == NULL) {
 		log_file = stderr;
 		log(LOG_INF, "Could not open %s. Using stderr instead.", log_path);

@@ -80,14 +80,19 @@ user_free(struct user *user)
 static void
 write_hashes_callback(void *user, struct post *post)
 {
-	log(LOG_DBG, "post %s with hash %lu\n", post->title, post->hash);
+	log(LOG_DBG, "post %s with hash %lx", post->title, post->hash);
 	fwrite(&post->hash, 1, sizeof(post->hash), (FILE *)user);
 }
 
 int
 hash_cmp(const void *a, const void *b)
 {
-	return *(uint64_t *)a - *(uint64_t *)b;
+	uint64_t ia = *(uint64_t *)a;
+	uint64_t ib = *(uint64_t *)b;
+	
+	if (ia < ib) return -1;
+	if (ia > ib) return 1;
+	return 0;
 }
 
 size_t
@@ -162,20 +167,20 @@ save_hash(struct entry *entry, uint64_t hash)
 	fclose(f);
 }
 
+/*
 int
 asprintf(char **buf, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
 	
-	char c;
-	size_t siz = vsnprintf(&c, 1, fmt, args) + 1;
-	*buf = malloc(siz);
+	size_t siz = vsnprintf(NULL, 0, fmt, args) + 1;
+	*buf = calloc(1, siz + 1);
 	(*buf)[siz - 1] = 0;
 	
-	vsnprintf(*buf, siz, fmt, args);
+	vsnprintf(*buf, siz - 1, fmt, args);
 
 	va_end(args);
 	
 	return siz;
-}
+}*/
