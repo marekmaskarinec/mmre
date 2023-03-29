@@ -15,8 +15,10 @@ static void
 parsePost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
+			assertr(, node->children, "The title node is invalid.");
 			post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
+			assertr(, node->children, "The link node is invalid.");
 			post->link = (char *)node->children->content;
 		}
 	}
