@@ -86,10 +86,10 @@ check_entry_rss_callback(void *user, struct post *post)
 	char *subject;
 	asprintf(&subject, "%s: %s", post->parent->name, post->title);
 
-	/*send_email_SMTP(
+	send_email_SMTP(
 		owner->smtp_url, subject, owner->smtp_domain, owner->smtp_from,
 		owner->email, owner->smtp_login, owner->smtp_pwd, post->link
-	);*/
+	);
 	
 	free(subject);
 
