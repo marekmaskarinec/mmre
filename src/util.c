@@ -159,6 +159,8 @@ save_hash(struct entry *entry, uint64_t hash)
 	entry->hashes = realloc(entry->hashes, ++entry->nhash * sizeof(uint64_t));
 	entry->hashes[entry->nhash - 1] = hash;
 	
+	qsort(entry->hashes, entry->nhash, sizeof(uint64_t), hash_cmp);
+	
 	char buf[BUFSIZ] = {0};
 	snprintf(buf, BUFSIZ - 1, "/var/lib/mmre/%s/%lx", entry->owner->email, djb2(entry->url));
 	FILE *f = fopen(buf, "wb");
