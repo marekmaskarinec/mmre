@@ -9,7 +9,8 @@
 .
 .
 .Sh DESCRIPTION
-mmre uses a simple INI based configuration format. Example:
+mmre uses a simple INI based configuration format. By default it is
+/etc/mmre.ini. Example:
 .Bd -literal -offset indent
 [meta]
 interval = 20
@@ -22,11 +23,12 @@ smtp_from = <rss@example.com>
 smtp_url = smtps://smtp.example.com
 smtp_domain = example.com
 url = https://mrms.cz/articles/rss.xml
-url = https://mrms.cz/game/rss.xml
+url = https://sr.ht/~mrms/mmre/feed.rss
 .Sh meta section
 The meta section specifies non-user-specific configuration.
 .Ss interval
-The interval in minutes at which feeds shall be checked.
+The interval in minutes at which feeds shall be checked.  It must be a non-zero
+integer number.
 .Sh user section
 The user section specifies per-user configuration.
 .Ss email
