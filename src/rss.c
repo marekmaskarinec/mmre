@@ -18,10 +18,6 @@ parsePost(struct post *post, xmlNode *root) {
 			post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			post->link = (char *)node->children->content;
-		} else if (strcmp((char *)node->name, "pubDate") == 0) {
-			post->date = (char *)node->children->content;
-		} else if (strcmp((char *)node->name, "description") == 0) {
-			post->content = (char *)node->children->content;
 		}
 	}
 }
