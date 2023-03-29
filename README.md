@@ -12,11 +12,11 @@ You need to install `libcurl-dev` and `libxml2-dev`.
 
 ## configuration
 
-See `mmre(5)`
+See [`mmre(5)`](https://mrms.cz/mmre/man5.html)
 
 ## command line flags
 
-See `mmre(1)`
+See [`mmre(1)`](https://mrms.cz/mmre/man1.html)
 
 ## license
 
