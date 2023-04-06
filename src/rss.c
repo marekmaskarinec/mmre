@@ -12,7 +12,7 @@ hashPost(struct post *post) {
 }
 
 static void
-parsePost(struct post *post, xmlNode *root) {
+parseRssPost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
 			assertr(, node->children, "The title node is invalid.");
@@ -20,6 +20,26 @@ parsePost(struct post *post, xmlNode *root) {
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			assertr(, node->children, "The link node is invalid.");
 			post->link = (char *)node->children->content;
+		}
+	}
+}
+
+// same as rss but the link is in 'href' attribute instead of link node content
+static void
+parseAtomPost(struct post *post, xmlNode *root) {
+	for (xmlNode *node = root->children; node; node = node->next) {
+		if (strcmp((char *)node->name, "title") == 0) {
+			assertr(, node->children, "The title node is invalid.");
+			post->title = (char *)node->children->content;
+		} else if (strcmp((char *)node->name, "link") == 0) {
+			for (xmlAttr* attr = node->properties; attr; attr = attr->next) {
+				if (strcmp((char *)attr->name, "href") == 0) {
+					post->link = (char *)attr->children->content;
+					goto ok;
+				}
+			}
+			assertr(, node->children, "The link node has no href attribute.");
+		ok:;
 		}
 	}
 }
@@ -32,37 +52,48 @@ parse_RSS(const char *url, const char *text, void (* callback)(void *user, struc
 
 	doc = xmlReadDoc((xmlChar *)text, url, NULL, 0);
 	assertg(fail, doc, "Could not parse %s.", url);
-	
+
 	struct feed feed = {0};
-	
+
 	root = xmlDocGetRootElement(doc);
-	xmlNode *channel = {0};
-	
-	for (xmlNode *node = root->children; node; node = node->next)
-		if (strcmp((char *)node->name, "channel") == 0)
+	xmlNode *channel = root; // atom has item nodes in the root
+
+	// if this is not atom feed, search for the channel node
+	for (xmlNode *node = root->children; node; node = node->next) {
+		if (strcmp((char *)node->name, "channel") == 0) {
 			channel = node;
-	
+			break;
+		}
+	}
+
 	assertg(fail, channel, "The RSS feed %s is invalid.", url);
-	
+
 	for (xmlNode *node = channel->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
 			feed.name = (char *)node->children->content;
-		} else if (strcmp((char *)node->name, "item") == 0) {
+		} else if (strcmp((char *)node->name, "item") == 0) { // RSS
 			struct post post = {
 				.parent = &feed
 			};
-			parsePost(&post, node);
+			parseRssPost(&post, node);
+			post.hash = hashPost(&post);
+			callback(user, &post);
+		} else if (strcmp((char *)node->name, "entry") == 0) { // atom
+			struct post post = {
+				.parent = &feed
+			};
+			parseAtomPost(&post, node);
 			post.hash = hashPost(&post);
 			callback(user, &post);
 		}
 	}
-	
+
 cleanup:
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 	
 	return 0;
-	
+
 fail:
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
@@ -75,12 +106,12 @@ check_entry_rss_callback(void *user, struct post *post)
 {
 	struct entry *entry = user;
 	const struct user *owner = entry->owner;
-	
+
 	if (bsearch(&post->hash, entry->hashes, entry->nhash, sizeof(uint64_t), hash_cmp))
 		return;
-	
+
 	log(LOG_INF, "New unread post %s %lx from feed %s.", post->title, post->hash, entry->url);
-	
+
 	char *subject;
 	asprintf(&subject, "%s: %s", post->parent->name, post->title);
 
@@ -88,7 +119,7 @@ check_entry_rss_callback(void *user, struct post *post)
 		owner->smtp_url, subject, owner->smtp_domain, owner->smtp_from,
 		owner->email, owner->smtp_login, owner->smtp_pwd, post->link
 	);
-	
+
 	free(subject);
 
 	save_hash(entry, post->hash);
@@ -102,7 +133,7 @@ check_entry(struct user *user, struct entry *entry)
 		return;
 	assertg(cleanup, !parse_RSS(entry->url, data, check_entry_rss_callback, entry),
 		"Could not parse feed from %s.", entry->url);
-		
+
 cleanup:
 	free(data);
 }
