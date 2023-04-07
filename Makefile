@@ -12,8 +12,7 @@ CFLAGS= \
 	-Wno-unused-label \
 	-Wno-pointer-to-int-cast \
 	-Wno-unused-result \
-	-fsanitize=address \
-	-g
+	-O2
 LD= -lxml2 -lcurl
 
 TEST_SRC=$(wildcard tests/*.c)
