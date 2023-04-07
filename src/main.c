@@ -27,6 +27,10 @@ static void
 SIGHUP_handler(int _) {
 	log(LOG_INF, "Reloading config");
 	load_config(cfg_path);
+
+	for (int i = 0; i < nuser; ++i)
+		for (int j = 0; j < users[i].nentry; ++j)
+			check_entry(&users[i], &users[i].entries[j]);
 }
 
 static void
