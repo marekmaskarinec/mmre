@@ -20,6 +20,7 @@ static struct user *user = NULL;
 static void
 load_user(const char *key, const char *value) {
 	if (strcmp(key, "email") == 0) {
+		log(LOG_DBG, "Reallocing users to %d.", nuser + 1);
 		users = realloc(users, ++nuser * sizeof(struct user));
 		user = &users[nuser - 1];
 		memset(user, 0, sizeof(struct user));
@@ -51,7 +52,6 @@ load_user(const char *key, const char *value) {
 		memset(entry, 0, sizeof(struct entry));
 
 		entry->url = strdup(value);
-		entry->owner = user;
 
 		entry->nhash = load_hashes(&entry->hashes, user, value);
 	} else {
@@ -68,6 +68,12 @@ callback(void *user, const char *section, const char *key, const char *value) {
 	}
 
 	return 0;
+}
+
+static void
+build_user(struct user *user) {
+	for (int i=0; i < user->nentry; ++i)
+		user->entries[i].owner = user;
 }
 
 static void
@@ -98,6 +104,9 @@ load_config(char *path) {
 	assertf(f, "No configuration file found at %s", path);
 	ini_parse_file(f, callback, NULL);
 	fclose(f);
+	
+	for (int i = 0; i < nuser; ++i)
+		build_user(&users[i]);
 
 	for (int i = 0; i < nuser; ++i)
 		validate_user(&users[i]);
