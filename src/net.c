@@ -47,7 +47,7 @@ get_url(const char *url) {
 	curl_easy_setopt(curl, CURLOPT_URL, url);
 	curl_easy_setopt(
 	    curl, CURLOPT_USERAGENT,
-	    "mmre v0.1 - RSS feed to email daemon https://mrms.cz/mmre"
+	    "mmre " VERSION " - RSS feed to email daemon https://mrms.cz/mmre"
 	);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getUrl__writeFunction);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &b);

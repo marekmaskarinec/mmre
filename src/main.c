@@ -35,7 +35,7 @@ SIGHUP_handler(int _) {
 
 static void
 help() {
-	printf("mmre - a rss to email daemon\n"
+	printf("mmre " VERSION " - a rss to email daemon\n"
 	       "\t-c <path> - set the config path. Default /etc/mmre.ini\n"
 	       "\t-l <path> - set the log path. Default /var/log/mmre.log\n"
 	       "\t-v - enable verbose output\n"

@@ -12,6 +12,7 @@ CFLAGS= \
 	-Wno-unused-label \
 	-Wno-pointer-to-int-cast \
 	-Wno-unused-result \
+	-DVERSION=\"v0.3\" \
 	-O2
 LD= -lxml2 -lcurl
 
