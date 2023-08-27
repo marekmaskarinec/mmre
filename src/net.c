@@ -88,14 +88,14 @@ sendEmailSMTP__readFunction(
 	return nmemb;
 }
 
-void
+int
 send_email_SMTP(
     const char *smtp, const char *subject, const char *domain, const char *from,
     const char *to, const char *user, const char *pwd, const char *msg
 ) {
 	log(LOG_DBG, "Sending email to %s.", to);
 	CURL *curl = curl_easy_init();
-	assertr(, curl, "Could not init curl.");
+	assertr(1, curl, "Could not init curl.");
 
 	curl_easy_setopt(curl, CURLOPT_URL, smtp);
 	curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_TRY);
@@ -147,12 +147,19 @@ send_email_SMTP(
 	curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
 	assertg(
-	    cleanup, !curl_easy_perform(curl), "Could not send email to %s.", to
+	    err, !curl_easy_perform(curl), "Could not send email to %s.", to
 	);
 
-cleanup:
 	curl_slist_free_all(rcpt);
 	free(buf.buf);
 
 	curl_easy_cleanup(curl);
+	return 0;
+
+err:
+	curl_slist_free_all(rcpt);
+	free(buf.buf);
+
+	curl_easy_cleanup(curl);
+	return 1;
 }

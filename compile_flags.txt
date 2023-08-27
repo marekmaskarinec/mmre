@@ -1,4 +1,0 @@
--Iinclude
--I/usr/include/libxml2
--Iinih
--DVERSION="vX.X"

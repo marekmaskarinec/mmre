@@ -3,3 +3,4 @@ mmre
 .vscode
 conf.ini
 log
+compile_commands.json
