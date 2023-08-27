@@ -68,11 +68,6 @@ user_free(struct user *user) {
 
 	free(user->entries);
 	free(user->email);
-	free(user->smtp_domain);
-	free(user->smtp_from);
-	free(user->smtp_login);
-	free(user->smtp_pwd);
-	free(user->smtp_url);
 }
 
 static void
@@ -135,7 +130,7 @@ load_hashes(uint64_t **hashes, struct user *user, const char *url) {
 	}
 
 	f = fopen(buf, "wb");
-	assertf(f, "Could not open file %s\n.", buf);
+	assertf(f, "Could not open file %s.", buf);
 	log(LOG_DBG, "%s was not found, downloading feed from %s.", buf, url);
 	char *data = get_url(url);
 	assertg(

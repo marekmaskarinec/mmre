@@ -14,14 +14,19 @@ mmre uses a simple INI based configuration format. By default it is
 .Bd -literal -offset indent
 [meta]
 interval = 20
-
-[user]
-email = <example@example.com>
 smtp_login = rss
 smtp_pwd = pa$$word1
 smtp_from = <rss@example.com>
 smtp_url = smtps://smtp.example.com
 smtp_domain = example.com
+
+[user]
+email = <example@example.com>
+url = https://mrms.cz/articles/rss.xml
+url = https://sr.ht/~mrms/mmre/feed.rss
+
+[user]
+email = <example2@example.com>
 url = https://mrms.cz/articles/rss.xml
 url = https://sr.ht/~mrms/mmre/feed.rss
 .Sh meta section
@@ -29,11 +34,6 @@ The meta section specifies non-user-specific configuration.
 .Ss interval
 The interval in minutes at which feeds shall be checked.  It must be a non-zero
 integer number.
-.Sh user section
-The user section specifies per-user configuration.
-.Ss email
-This specifies the email to which posts will be sent.  The email property
-creates a new user.  The address must be inside <>.
 .Ss smtp_login
 This specifies the login of the outgoing address.
 .Ss smtp_pwd
@@ -45,6 +45,11 @@ Specify the adress of the outgoing smtp server.
 .Ss smtp_domain
 Specify the domain, where the smtp server runs.  Should be same as in
 smtp_from.
+.Sh user section
+The user section specifies per-user configuration.
+.Ss email
+This specifies the email to which posts will be sent.  The email property
+creates a new user.  The address must be inside <>.
 .Ss url
 Add a feed by it's url.  This option can be used multiple times.
 .Sh SEE ALSO

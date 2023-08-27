@@ -8,7 +8,7 @@
 
 uint64_t
 hashPost(struct post *post) {
-	return djb2(post->title);
+	return djb2(post->title ? post->title : post->link);
 }
 
 static void
@@ -122,8 +122,8 @@ check_entry_rss_callback(void *user, struct post *post) {
 	asprintf(&subject, "%s: %s", post->parent->name, post->title);
 
 	int ret = send_email_SMTP(
-	    owner->smtp_url, subject, owner->smtp_domain, owner->smtp_from,
-	    owner->email, owner->smtp_login, owner->smtp_pwd, post->link
+	    smtp_url, subject, smtp_domain, smtp_from, owner->email, smtp_login,
+	    smtp_pwd, post->link
 	);
 
 	free(subject);

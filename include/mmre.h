@@ -66,11 +66,6 @@ struct entry {
 
 struct user {
 	char *email;
-	char *smtp_login;
-	char *smtp_pwd;
-	char *smtp_from;
-	char *smtp_url;
-	char *smtp_domain;
 	struct entry *entries;
 	int nentry;
 };
@@ -110,6 +105,11 @@ asprintf(char **buf, const char *fmt, ...);
 extern FILE *log_file;
 extern int min_log_level;
 extern uint32_t interval;
+extern char *smtp_login;
+extern char *smtp_pwd;
+extern char *smtp_from;
+extern char *smtp_url;
+extern char *smtp_domain;
 extern struct user *users;
 extern int nuser;
 #endif

@@ -11,6 +11,11 @@
 FILE *log_file = NULL;
 int min_log_level;
 uint32_t interval;
+char *smtp_login = NULL;
+char *smtp_pwd = NULL;
+char *smtp_from = NULL;
+char *smtp_url = NULL;
+char *smtp_domain = NULL;
 struct user *users;
 int nuser;
 
@@ -72,8 +77,10 @@ main(int argc, char *argv[]) {
 		}
 	}
 
-	if (strcmp("-", log_path) != 0)
+	if (strcmp("-", log_path) != 0) {
 		log_file = fopen(log_path, "a");
+	}
+
 	if (log_file == NULL) {
 		log_file = stderr;
 		log(LOG_INF, "Could not open %s. Using stderr instead.",

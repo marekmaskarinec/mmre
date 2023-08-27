@@ -10,6 +10,21 @@ load_meta(const char *key, const char *value) {
 	if (strcmp(key, "interval") == 0) {
 		interval = atoi(value);
 		assertf(interval, "Interval can't be zero.");
+	} else if (strcmp(key, "smtp_login") == 0) {
+		assertf(!smtp_login, "Can't set smtp_login twice.");
+		smtp_login = strdup(value);
+	} else if (strcmp(key, "smtp_pwd") == 0) {
+		assertf(!smtp_pwd, "Can't set smtp_pwd twice.");
+		smtp_pwd = strdup(value);
+	} else if (strcmp(key, "smtp_from") == 0) {
+		assertf(!smtp_from, "Can't set smtp_from twice.");
+		smtp_from = strdup(value);
+	} else if (strcmp(key, "smtp_url") == 0) {
+		assertf(!smtp_url, "Can't set smtp_url twice.");
+		smtp_url = strdup(value);
+	} else if (strcmp(key, "smtp_domain") == 0) {
+		assertf(!smtp_domain, "Can't set smtp_domain twice.");
+		smtp_domain = strdup(value);
 	} else {
 		log(LOG_FAT, "Unknown meta key %s.", key);
 	}
@@ -29,21 +44,6 @@ load_user(const char *key, const char *value) {
 		user->email = strdup(value);
 	} else if (user == NULL) {
 		log(LOG_FAT, "The email property must be the first.");
-	} else if (strcmp(key, "smtp_login") == 0) {
-		assertf(!user->smtp_login, "Can't set smtp_login twice.");
-		user->smtp_login = strdup(value);
-	} else if (strcmp(key, "smtp_pwd") == 0) {
-		assertf(!user->smtp_pwd, "Can't set smtp_pwd twice.");
-		user->smtp_pwd = strdup(value);
-	} else if (strcmp(key, "smtp_from") == 0) {
-		assertf(!user->smtp_from, "Can't set smtp_from twice.");
-		user->smtp_from = strdup(value);
-	} else if (strcmp(key, "smtp_url") == 0) {
-		assertf(!user->smtp_url, "Can't set smtp_url twice.");
-		user->smtp_url = strdup(value);
-	} else if (strcmp(key, "smtp_domain") == 0) {
-		assertf(!user->smtp_domain, "Can't set smtp_domain twice.");
-		user->smtp_domain = strdup(value);
 	} else if (strcmp(key, "url") == 0) {
 		user->entries = realloc(
 		    user->entries, ++user->nentry * sizeof(struct entry)
@@ -72,7 +72,7 @@ callback(void *user, const char *section, const char *key, const char *value) {
 
 static void
 build_user(struct user *user) {
-	for (int i=0; i < user->nentry; ++i)
+	for (int i = 0; i < user->nentry; ++i)
 		user->entries[i].owner = user;
 }
 
@@ -80,11 +80,6 @@ static void
 validate_user(struct user *user) {
 #define CHECK_PROPERTY(user, prop)                                             \
 	assertf(user->prop, "%s is not set for user %s", #prop, user->email);
-	CHECK_PROPERTY(user, smtp_login);
-	CHECK_PROPERTY(user, smtp_pwd);
-	CHECK_PROPERTY(user, smtp_from);
-	CHECK_PROPERTY(user, smtp_url);
-	CHECK_PROPERTY(user, smtp_domain);
 
 #undef CHECK_PROPERTY
 }
@@ -95,6 +90,11 @@ load_config(char *path) {
 	// in case we are reloading at runtime
 	for (int i = 0; i < nuser; ++i)
 		user_free(&users[i]);
+	free(smtp_login);
+	free(smtp_pwd);
+	free(smtp_from);
+	free(smtp_url);
+	free(smtp_domain);
 	free(users);
 	nuser = 0;
 
@@ -104,7 +104,7 @@ load_config(char *path) {
 	assertf(f, "No configuration file found at %s", path);
 	ini_parse_file(f, callback, NULL);
 	fclose(f);
-	
+
 	for (int i = 0; i < nuser; ++i)
 		build_user(&users[i]);
 
