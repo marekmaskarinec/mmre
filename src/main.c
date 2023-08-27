@@ -39,6 +39,7 @@ help() {
 	       "\t-c <path> - set the config path. Default /etc/mmre.ini\n"
 	       "\t-l <path> - set the log path. Default /var/log/mmre.log\n"
 	       "\t-v - enable verbose output\n"
+	       "\t-h - show this message\n"
 	       "see mmre(1) and mmre(5) for more info\n"
 	       "https://mrms.cz/mmre\n");
 	exit(0);
@@ -53,7 +54,7 @@ main(int argc, char *argv[]) {
 	min_log_level = 1;
 
 	int opt;
-	while ((opt = getopt(argc, argv, "l:c:v")) != -1) {
+	while ((opt = getopt(argc, argv, "l:c:vh")) != -1) {
 		switch (opt) {
 		case 'l':
 			log_path = optarg;
@@ -64,6 +65,7 @@ main(int argc, char *argv[]) {
 		case 'v':
 			min_log_level = 0;
 			break;
+		case 'h':
 		case '?':
 			help();
 			break;
