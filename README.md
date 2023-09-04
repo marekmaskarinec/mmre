@@ -1,13 +1,13 @@
 # MMRE - a RSS to email daemon
 
-MMRE is a daemon which periodically checks RSS feeds and sends new posts to
-email using SMTP.  It has support for multiple users.
+MMRE is a daemon which periodically checks RSS (or Atom) feeds and sends new
+posts to email using SMTP.  It has support for multiple users.
 
 ## install instructions
 
 You need to install `libcurl-dev` and `libxml2-dev`.
 
-1. clone this repository
+1. clone this repository with the `--recursive` flag.
 2. run `make install` with the appropriate privileges.
 
 ## configuration
