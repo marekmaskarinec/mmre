@@ -11,12 +11,16 @@ hashPost(struct post *post) {
 	return djb2(post->title ? post->title : post->link);
 }
 
+static char *nullStr = "(null)";
+
 static void
 parseRssPost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
-			assertr(, node->children, "The title node is invalid.");
-			post->title = (char *)node->children->content;
+			if (node->children == NULL)
+				post->title = nullStr;
+			else
+				post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			assertr(, node->children, "The link node is invalid.");
 			post->link = (char *)node->children->content;
@@ -29,8 +33,10 @@ static void
 parseAtomPost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
-			assertr(, node->children, "The title node is invalid.");
-			post->title = (char *)node->children->content;
+			if (node->children == NULL)
+				post->title = nullStr;
+			else
+				post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			for (xmlAttr *attr = node->properties; attr;
 			     attr = attr->next) {
