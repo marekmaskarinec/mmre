@@ -16,14 +16,11 @@ CFLAGS= \
 	-O2
 LD= -lxml2 -lcurl
 
-TEST_SRC=$(wildcard tests/*.c)
-TESTS=$(sort $(TEST_SRC:.c=.test))
-
 .PHONY: all clean install
 all: $(BIN)
 
 clean:
-	@rm -rf $(OBJ) $(BIN) $(LIB) $(TESTS)
+	@rm -rf $(OBJ) $(BIN) $(LIB)
 
 %.o: %.c $(HEADER)
 	@echo CC $@

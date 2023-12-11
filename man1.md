@@ -7,30 +7,30 @@ mmre(1) - General Commands Manual
 # SYNOPSIS
 
 **mmre**
-\[*-c&nbsp;config*]
-\[*-l&nbsp;log*]
-\[*-v*]
+\[_-c&nbsp;config_]
+\[_-l&nbsp;log_]
+\[_-v_]
 
 # DESCRIPTION
 
 A daemon which periodically checks RSS feeds and sends new posts to an email
-using SMTP.  It supports multiple users and feeds.
+using SMTP. It supports multiple users and feeds.
 
 The options are as follows:
 
-*-c*
+_-c_
 
-> Specify the configuration file.  By default: /etc/mmre.ini
+> Specify the configuration file. By default: /etc/mmre.ini
 
-*-l*
+_-l_
 
 > Specify the log file. By default: /var/log/mmre.log
 
-*-v*
+_-v_
 
 > Show verbose output
 
-*-h*
+_-h_
 
 > Show help text
 

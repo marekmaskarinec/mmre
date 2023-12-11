@@ -48,7 +48,7 @@ _log(enum logLevel level, char *msg, ...) {
 	fflush(log_file);
 
 	if (level == LOG_FAT)
-		abort();
+		exit(1);
 }
 
 void

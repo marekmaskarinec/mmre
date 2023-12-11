@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include <curl/curl.h>
@@ -29,16 +30,6 @@ SIGINT_handler(int _) {
 }
 
 static void
-SIGHUP_handler(int _) {
-	log(LOG_INF, "Reloading config");
-	load_config(cfg_path);
-
-	for (int i = 0; i < nuser; ++i)
-		for (int j = 0; j < users[i].nentry; ++j)
-			check_entry(&users[i], &users[i].entries[j]);
-}
-
-static void
 help() {
 	printf("mmre " VERSION " - a rss to email daemon\n"
 	       "\t-c <path> - set the config path. Default /etc/mmre.ini\n"
@@ -55,7 +46,7 @@ extern int optind, opterr, optopt;
 
 int
 main(int argc, char *argv[]) {
-	char *log_path = "/var/log/mmre.log";
+	char *log_path = "-";
 	min_log_level = 1;
 
 	int opt;
@@ -90,10 +81,22 @@ main(int argc, char *argv[]) {
 	load_config(cfg_path);
 
 	signal(SIGINT, SIGINT_handler);
-	signal(SIGHUP, SIGHUP_handler);
 	signal(SIGTERM, SIGINT_handler);
 
+	time_t mtime = 0;
+
 	while (alive) {
+		struct stat st;
+		if (stat(cfg_path, &st) == 0) {
+			if (mtime == 0)
+				mtime = st.st_mtime;
+
+			if (mtime != st.st_mtime) {
+				mtime = st.st_mtime;
+				load_config(cfg_path);
+			}
+		}
+
 		for (int i = 0; i < nuser; ++i)
 			for (int j = 0; j < users[i].nentry; ++j)
 				check_entry(&users[i], &users[i].entries[j]);

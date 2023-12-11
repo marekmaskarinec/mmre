@@ -91,11 +91,17 @@ load_config(char *path) {
 	for (int i = 0; i < nuser; ++i)
 		user_free(&users[i]);
 	free(smtp_login);
+	smtp_login = NULL;
 	free(smtp_pwd);
+	smtp_pwd = NULL;
 	free(smtp_from);
+	smtp_from = NULL;
 	free(smtp_url);
+	smtp_url = NULL;
 	free(smtp_domain);
+	smtp_domain = NULL;
 	free(users);
+	users = NULL;
 	nuser = 0;
 
 	users = calloc(sizeof(struct user), 1);

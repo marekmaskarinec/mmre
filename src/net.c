@@ -94,6 +94,10 @@ send_email_SMTP(
     const char *to, const char *user, const char *pwd, const char *msg
 ) {
 	log(LOG_DBG, "Sending email to %s.", to);
+#ifdef MMRE_NO_SEND_EMAIL
+	return 0;
+#endif
+
 	CURL *curl = curl_easy_init();
 	assertr(1, curl, "Could not init curl.");
 
