@@ -25,11 +25,6 @@ static char *cfg_path = "/etc/mmre.ini";
 static volatile int alive = 1;
 
 static void
-SIGINT_handler(int _) {
-	alive = 0;
-}
-
-static void
 help() {
 	printf("mmre " VERSION " - a rss to email daemon\n"
 	       "\t-c <path> - set the config path. Default /etc/mmre.ini\n"
@@ -43,6 +38,25 @@ help() {
 
 extern char *optarg;
 extern int optind, opterr, optopt;
+
+void
+SIGINT_handler(int _) {
+	exit(0);
+}
+
+static void
+destroy(void) {
+	log(LOG_INF, "Exiting");
+	fflush(log_file);
+	if (log_file != stderr)
+		fclose(log_file);
+
+	for (int i = 0; i < nuser; ++i) {
+		user_free(&users[i]);
+	}
+
+	free(users);
+}
 
 int
 main(int argc, char *argv[]) {
@@ -78,14 +92,17 @@ main(int argc, char *argv[]) {
 		    log_path);
 	}
 
+	log(LOG_INF, "Starting mmre " VERSION);
+
 	load_config(cfg_path);
 
+	atexit(destroy);
 	signal(SIGINT, SIGINT_handler);
 	signal(SIGTERM, SIGINT_handler);
 
 	time_t mtime = 0;
 
-	while (alive) {
+	for (;;) {
 		struct stat st;
 		if (stat(cfg_path, &st) == 0) {
 			if (mtime == 0)
@@ -103,15 +120,4 @@ main(int argc, char *argv[]) {
 
 		sleep(interval * 60);
 	}
-
-	log(LOG_INF, "exiting");
-
-	if (log_file != stderr)
-		fclose(log_file);
-
-	for (int i = 0; i < nuser; ++i) {
-		user_free(&users[i]);
-	}
-
-	free(users);
 }
