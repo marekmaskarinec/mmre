@@ -22,13 +22,11 @@ int nuser;
 
 static char *cfg_path = "/etc/mmre.ini";
 
-static volatile int alive = 1;
-
 static void
 help() {
 	printf("mmre " VERSION " - a rss to email daemon\n"
-	       "\t-c <path> - set the config path. Default /etc/mmre.ini\n"
-	       "\t-l <path> - set the log path. Default /var/log/mmre.log\n"
+	       "\t-c <path> - set the config path. Default: /etc/mmre.ini\n"
+	       "\t-l <path> - set the log path. Default: stdout\n"
 	       "\t-v - enable verbose output\n"
 	       "\t-h - show this message\n"
 	       "see mmre(1) and mmre(5) for more info\n"
@@ -84,12 +82,14 @@ main(int argc, char *argv[]) {
 
 	if (strcmp("-", log_path) != 0) {
 		log_file = fopen(log_path, "a");
+		if (log_file == NULL) {
+			log(LOG_INF, "Could not open %s. Using stdout instead.",
+					log_path);
+		}
 	}
 
 	if (log_file == NULL) {
-		log_file = stderr;
-		log(LOG_INF, "Could not open %s. Using stderr instead.",
-		    log_path);
+		log_file = stdout;
 	}
 
 	log(LOG_INF, "Starting mmre " VERSION);
