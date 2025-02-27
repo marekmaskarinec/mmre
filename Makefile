@@ -12,7 +12,7 @@ CFLAGS= \
 	-Wno-unused-label \
 	-Wno-pointer-to-int-cast \
 	-Wno-unused-result \
-	-DVERSION=\"v0.5\"
+	-DVERSION=\"v0.6\"
 LD= -lxml2 -lcurl
 
 debug: CFLAGS += -g -fsanitize=address
