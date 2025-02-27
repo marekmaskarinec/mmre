@@ -22,6 +22,7 @@ smtp_domain = example.com
 
 [user]
 email = <example@example.com>
+alert = true
 url = https://mrms.cz/articles/rss.xml
 url = https://sr.ht/~mrms/mmre/feed.rss
 
@@ -50,6 +51,8 @@ The user section specifies per-user configuration.
 .Ss email
 This specifies the email to which posts will be sent.  The email property
 creates a new user.  The address must be inside <>.
+.Ss alert
+If set to true, the user will be alerted by email when the config reloads.
 .Ss url
 Add a feed by it's url.  This option can be used multiple times.
 .Sh SEE ALSO

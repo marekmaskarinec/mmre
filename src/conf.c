@@ -54,6 +54,9 @@ load_user(const char *key, const char *value) {
 		entry->url = strdup(value);
 
 		entry->nhash = load_hashes(&entry->hashes, user, value);
+	} else if (strcmp(key, "alert") == 0) {
+		log(LOG_DBG, "Setting alert for %s.", user->email);
+		user->send_alert = strcmp(value, "true") == 0;
 	} else {
 		log(LOG_FAT, "Unknown user key %s.", key);
 	}
@@ -82,6 +85,41 @@ validate_user(struct user *user) {
 	assertf(user->prop, "%s is not set for user %s", #prop, user->email);
 
 #undef CHECK_PROPERTY
+}
+
+static void
+send_load_alert(struct user *user) {
+	log(LOG_INF, "Sending config load alert to %s", user->email);
+
+	char *subject;
+	asprintf(&subject, "SYSTEM: MMRE configuration loaded");
+
+	// Assumes worst case of 64 128 byte entries + 1024 for initial message
+	static char msg_buf[1024 + 128 * 64];
+	char *buf = msg_buf;
+	buf += snprintf(
+	    msg_buf, sizeof(msg_buf),
+	    "The MMRE configuration was reloaded.\n\n"
+	    "Fetch Interval: %d minutes\n"
+	    "You have are subscribed to the following feeds (%d total):\n",
+	    interval, user->nentry
+	);
+
+	for (int i = 0; i < user->nentry; i++) {
+		buf += snprintf(
+		    buf, sizeof(msg_buf) - (buf - msg_buf), "* %s\n",
+		    user->entries[i].url
+		);
+	}
+
+	int ret = send_email_SMTP(
+	    smtp_url, subject, smtp_domain, smtp_from, user->email, smtp_login,
+	    smtp_pwd, msg_buf
+	);
+
+	if (ret == 0) {
+		log(LOG_ERR, "Sending alert email to %s failed.", user->email);
+	}
 }
 
 void
@@ -117,4 +155,8 @@ load_config(char *path) {
 	for (int i = 0; i < nuser; ++i)
 		validate_user(&users[i]);
 	assertf(interval, "Interval was not set.");
+
+	for (int i = 0; i < nuser; ++i)
+		if (users[i].send_alert)
+			send_load_alert(&users[i]);
 }

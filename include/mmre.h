@@ -1,6 +1,7 @@
 #ifndef MMRE_H
 #define MMRE_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -68,6 +69,7 @@ struct user {
 	char *email;
 	struct entry *entries;
 	int nentry;
+	bool send_alert;
 };
 
 char *
