@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -67,7 +67,9 @@ parse_RSS(
 	doc = xmlReadDoc((xmlChar *)text, url, NULL, 0);
 	assertg(fail, doc, "Could not parse %s.", url);
 
-	struct feed feed = {0};
+	struct feed feed = {
+	    .name = url,
+	};
 
 	root = xmlDocGetRootElement(doc);
 	xmlNode *channel = root; // atom has item nodes in the root
@@ -84,7 +86,9 @@ parse_RSS(
 
 	for (xmlNode *node = channel->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
-			feed.name = (char *)node->children->content;
+			if (node->children) {
+				feed.name = (char *)node->children->content;
+			}
 		} else if (strcmp((char *)node->name, "item") == 0) { // RSS
 			struct post post = {.parent = &feed};
 			parseRssPost(&post, node);

@@ -43,7 +43,7 @@ _log(enum logLevel level, char *msg, ...);
 	} while (0)
 
 struct feed {
-	char *name;
+	const char *name;
 	char *author;
 };
 
