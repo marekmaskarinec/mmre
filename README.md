@@ -12,7 +12,6 @@ You need to install `libcurl-dev` and `libxml2-dev`.
 
 ## contributing
 
-I'm happy to take contributions through the [mailing list](https://lists.sr.ht/~mrms/public-inbox).
 Please format C source using `clang-format`. For source code documentation, see
 [internal.md](internal.md).
 
