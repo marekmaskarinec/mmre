@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -24,13 +25,15 @@ static char *cfg_path = "/etc/mmre.ini";
 
 static void
 help() {
-	printf("mmre " VERSION " - a rss to email daemon\n"
-	       "\t-c <path> - set the config path. Default: /etc/mmre.ini\n"
-	       "\t-l <path> - set the log path. Default: stdout\n"
-	       "\t-v - enable verbose output\n"
-	       "\t-h - show this message\n"
-	       "see mmre(1) and mmre(5) for more info\n"
-	       "https://mrms.cz/mmre\n");
+	printf(
+	    "mmre " VERSION " - a rss to email daemon\n"
+	    "\t-c <path> - set the config path. Default: /etc/mmre.ini\n"
+	    "\t-l <path> - set the log path. Default: stdout\n"
+	    "\t-v - enable verbose output\n"
+	    "\t-h - show this message\n"
+	    "see mmre(1) and mmre(5) for more info\n"
+	    "https://mmq.cz/mmre\n"
+	);
 	exit(0);
 }
 
@@ -84,7 +87,7 @@ main(int argc, char *argv[]) {
 		log_file = fopen(log_path, "a");
 		if (log_file == NULL) {
 			log(LOG_INF, "Could not open %s. Using stdout instead.",
-					log_path);
+			    log_path);
 		}
 	}
 

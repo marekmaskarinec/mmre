@@ -17,11 +17,11 @@ Please format C source using `clang-format`. For source code documentation, see
 
 ## configuration
 
-See [`mmre(5)`](https://mrms.cz/mmre/man5.html)
+See [`mmre(5)`](https://mmq.cz/mmre/man5.html)
 
 ## command line flags
 
-See [`mmre(1)`](https://mrms.cz/mmre/man1.html)
+See [`mmre(1)`](https://mmq.cz/mmre/man1.html)
 
 ## license
 
