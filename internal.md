@@ -15,8 +15,8 @@
 
 MMRE saves some data to `/var/lib/mmre`. In this folder, each user has a folder
 named the same as their email. In this folder, each of the user's feeds has its
-file. The file is not named as a hex dump of a djb2 hash of the feed's URL.
-The file contains hashes of all the already processed posts sorted alphabetically.
+file. The file is named as a hex dump of a djb2 hash of the feed's URL. The file
+contains a sorted list of the hashes of processed posts.
 
 When a feed is checked, first we check if it already has a file. If it doesn't,
 it is created and automatically filled with all the hashes in the feed (this is
