@@ -52,9 +52,12 @@ get_url(const char *url) {
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getUrl__writeFunction);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &b);
 
+	char error_buf[CURL_ERROR_SIZE + 1];
+	curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error_buf);
+
 	assertg(
-	    fail, !curl_easy_perform(curl), "Could not perform request to %s",
-	    url
+	    fail, !curl_easy_perform(curl),
+	    "Could not perform request to %s: %s", url, error_buf
 	);
 
 	b.str[b.len] = 0;
@@ -150,8 +153,12 @@ send_email_SMTP(
 	curl_easy_setopt(curl, CURLOPT_READDATA, &buf);
 	curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
+	char error_buf[CURL_ERROR_SIZE + 1];
+	curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error_buf);
+
 	assertg(
-	    err, !curl_easy_perform(curl), "Could not send email to %s.", to
+	    err, !curl_easy_perform(curl), "Could not send email to %s: %s", to,
+	    error_buf
 	);
 
 	curl_slist_free_all(rcpt);

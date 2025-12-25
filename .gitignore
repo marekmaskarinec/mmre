@@ -4,3 +4,4 @@ mmre
 conf.ini
 log
 compile_commands.json
+.cache
