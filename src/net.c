@@ -127,6 +127,8 @@ send_email_SMTP(
 	const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
+	msg = msg ? msg : "";
+
 	struct rbuf buf = (struct rbuf){
 	    .len = strlen(msg),
 	};
