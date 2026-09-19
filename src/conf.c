@@ -117,7 +117,7 @@ send_load_alert(struct user *user) {
 	    smtp_pwd, msg_buf
 	);
 
-	if (ret == 0) {
+	if (ret != 0) {
 		log(LOG_ERR, "Sending alert email to %s failed.", user->email);
 	}
 }
