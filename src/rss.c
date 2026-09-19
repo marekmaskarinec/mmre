@@ -9,24 +9,28 @@
 
 uint64_t
 hashPost(struct post *post) {
-	return djb2(post->title ? post->title : post->link);
+	return djb2(post->title);
 }
 
-static char *nullStr = "(null)";
+static void
+fixupPost(struct post *post) {
+	if (post->title == NULL)
+		post->title = post->link;
+}
 
 static void
 parseRssPost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
-			if (node->children == NULL)
-				post->title = nullStr;
-			else
+			if (node->children != NULL)
 				post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			assertr(, node->children, "The link node is invalid.");
 			post->link = (char *)node->children->content;
 		}
 	}
+
+	fixupPost(post);
 }
 
 // same as rss but the link is in 'href' attribute instead of link node content
@@ -34,9 +38,7 @@ static void
 parseAtomPost(struct post *post, xmlNode *root) {
 	for (xmlNode *node = root->children; node; node = node->next) {
 		if (strcmp((char *)node->name, "title") == 0) {
-			if (node->children == NULL)
-				post->title = nullStr;
-			else
+			if (node->children != NULL)
 				post->title = (char *)node->children->content;
 		} else if (strcmp((char *)node->name, "link") == 0) {
 			for (xmlAttr *attr = node->properties; attr;
@@ -54,6 +56,8 @@ parseAtomPost(struct post *post, xmlNode *root) {
 		ok:;
 		}
 	}
+
+	fixupPost(post);
 }
 
 int
@@ -92,11 +96,19 @@ parse_RSS(
 		} else if (strcmp((char *)node->name, "item") == 0) { // RSS
 			struct post post = {.parent = &feed};
 			parseRssPost(&post, node);
+			if (post.title == NULL) {
+				log(LOG_DBG, "Skipping a post without title");
+				continue;
+			}
 			post.hash = hashPost(&post);
 			callback(user, &post);
 		} else if (strcmp((char *)node->name, "entry") == 0) { // atom
 			struct post post = {.parent = &feed};
 			parseAtomPost(&post, node);
+			if (post.title == NULL) {
+				log(LOG_DBG, "Skipping a post without title");
+				continue;
+			}
 			post.hash = hashPost(&post);
 			callback(user, &post);
 		}
